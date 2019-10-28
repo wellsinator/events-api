@@ -16,11 +16,10 @@ app.get('/events', async (req, res) => {
 
 app.post('/point', async (req, res) => {
   const point = req.body;
-  console.log(point);
-  // await db.points.insertOne(point);
+  await db.points.insertOne(point);
   res.send();
 });
 
 app.listen(port, async () => {
-  console.log(`Example app listening on port ${port}!`);
+  console.log(`Listening on port ${port}!`);
 });
