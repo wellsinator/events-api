@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import db from './db/index';
+import db from './db';
 
 const app = express();
 const port = 3000;
@@ -8,8 +8,8 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/events', async (req, res) => {
-  const events = await db.Event.findAll();
+app.get('/events/root', async (req, res) => {
+  const events = await db.Event.findAll({ where: { parentId: null } });
   res.send(events);
 });
 
