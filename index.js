@@ -13,9 +13,17 @@ app.get('/events/root', async (req, res) => {
   res.send(events);
 });
 
-app.post('/point', async (req, res) => {
-  const point = req.body;
-  await db.Point.create(point);
+app.get('/events/:id/children', async (req, res) => {
+  const { id } = req.params;
+  const event = await db.Event.findByPk(id, {
+    include: [{ model: db.Event, as: 'children' }],
+  });
+  res.send(event.children);
+});
+
+app.post('/points', async (req, res) => {
+  const { event } = req.body;
+  await db.Point.create({ eventId: event.id });
   res.send();
 });
 
