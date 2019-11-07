@@ -15,10 +15,20 @@ app.get('/events/root', async (req, res) => {
 
 app.get('/events/:id/children', async (req, res) => {
   const { id } = req.params;
-  const event = await db.Event.findByPk(id, {
-    include: [{ model: db.Event, as: 'children' }],
-  });
-  res.send(event.children);
+  const events = await db.Event.findAll({ where: { parentId: id } });
+  res.send(events);
+});
+
+app.post('/events', async (req, res) => {
+  const { event, name } = req.body;
+  const eventParams = { name };
+
+  if (event) {
+    eventParams.parentId = event.id;
+  }
+
+  await db.Event.create(eventParams);
+  res.send();
 });
 
 app.post('/points', async (req, res) => {
