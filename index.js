@@ -31,9 +31,23 @@ app.post('/events', async (req, res) => {
   res.send();
 });
 
+app.get('/points', async (req, res) => {
+  const points = await db.Point.findAll({
+    include: [{
+      model: db.Event,
+      include: [ { model: db.Event, as: 'ancestors' } ],
+      order: [ [ { model: db.Event, as: 'ancestors' }, 'hierarchyLevel' ] ],
+    }],
+  });
+  res.send(points);
+});
+
 app.post('/points', async (req, res) => {
-  const { event } = req.body;
-  await db.Point.create({ eventId: event.id });
+  const { date, event } = req.body;
+  await db.Point.create({
+    date,
+    eventId: event.id
+  });
   res.send();
 });
 

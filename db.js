@@ -1,5 +1,6 @@
-import { Sequelize } from 'sequelize';
+import SequelizeHierarchy from 'sequelize-hierarchy';
 
+const Sequelize = SequelizeHierarchy();
 const sequelize = new Sequelize('events', 'root', '', {
   host: 'localhost',
   dialect: 'mysql',
@@ -8,12 +9,13 @@ const sequelize = new Sequelize('events', 'root', '', {
 
 const Event = sequelize.define('event', {
   name: Sequelize.STRING,
+}, {
+  hierarchy: true,
 });
 
-const Point = sequelize.define('point');
-
-Event.hasMany(Event, { as: 'children', foreignKey: 'parentId' });
-Event.belongsTo(Event, { as: 'parent', foreignKey: 'parentId' });
+const Point = sequelize.define('point', {
+  date: Sequelize.DATE,
+});
 
 Event.hasMany(Point);
 Point.belongsTo(Event);
